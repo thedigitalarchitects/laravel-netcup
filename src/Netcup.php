@@ -31,20 +31,15 @@ class Netcup
     public function __construct(?string $clientrequestid = null)
     {
         $this->clientrequestid = $clientrequestid;
+        $this->setConfig();
         $this->useRest();
-
-        $this->setConfig(
-            config('services.netcup.api_key'),
-            config('services.netcup.api_password'),
-            config('services.netcup.customer_number')
-        );
     }
 
-    public function setConfig(string $apiKey, string $apiPassword, int $customerNumber): self
+    public function setConfig(string $location = 'services.netcup'): self
     {
-        $this->apikey = $apiKey;
-        $this->apipassword = $apiPassword;
-        $this->customernumber = $customerNumber;
+        $this->apikey = config($location.'.api_key');
+        $this->apipassword =  config($location.'.api_password');
+        $this->customernumber = config($location.'.customer_number');
 
         return $this;
     }

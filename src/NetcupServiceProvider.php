@@ -9,5 +9,6 @@ class NetcupServiceProvider extends ServiceProvider
     public function registeringPackage()
     {
         $this->app->alias(Netcup::class, 'laravel-netcup');
+
     }
 }
