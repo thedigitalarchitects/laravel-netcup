@@ -31,7 +31,7 @@ trait Dns
 
     }
 
-    public function infoDnsRecords(mixed $domain): ?Collection
+    public function infoDnsRecords(mixed $domain): object
     {
         if($domain instanceof NetcupDomain) {
             $param = ['domainname' => $domain->domainname];
@@ -41,9 +41,7 @@ trait Dns
 
         $response = $this->_Call('infoDnsRecords', $param );
 
-        if(!empty($response->responsedata)) {
-            return $this->loadCollectionDnsRecords($response->responsedata->dnsrecords);
-        }
+        return $this->returnDns($response);
     }
 
     public function updateDnsRecords()
@@ -60,6 +58,24 @@ trait Dns
         }
 
         return $records;
+    }
+
+    protected function returnDns(object $response): object
+    {
+        $return = array();
+
+        if($response->statuscode == 2000) {
+            $return['success'] = true;
+            if(!empty($response->responsedata)) {
+                $return['data'] = $this->loadCollectionDnsRecords($response->responsedata->dnsrecords);
+            }
+        } else {
+            $return['success'] = false;
+        }
+        unset($response->responsedata);
+        $return['payload'] = $response;
+
+        return (object) $return;
     }
 
 

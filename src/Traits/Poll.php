@@ -2,6 +2,7 @@
 
 namespace Tda\LaravelNetcup\Traits;
 
+use \Illuminate\Support\Collection;
 
 trait Poll
 {
@@ -24,7 +25,7 @@ trait Poll
 
     protected function returnPoll(object $response): object
     {
-        $return = array();
+        $return = [];
 
         if($response->statuscode == 2000) {
             $return['success'] = true;
