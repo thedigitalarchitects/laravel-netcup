@@ -5,7 +5,7 @@ namespace Tda\LaravelNetcup;
 
 class NetcupDnsRecord
 {
-    public string $id;
+    public int $id;
     public string $hostname;
     public string $type;
     public int $priority;
@@ -14,14 +14,17 @@ class NetcupDnsRecord
     public string $state;
 
 
-    public function __construct(\stdClass $data)
+    public function __construct(object $data)
     {
-        $this->id = $data->id;
-        $this->hostname = $data->hostname;
-        $this->type = $data->type;
-        $this->priority = $data->priority;
-        $this->destination = $data->destination;
-        $this->deleterecord = $data->deleterecord;
-        $this->state = $data->state;
+        if($data) {
+            $this->id = $data->id;
+            $this->hostname = $data->hostname;
+            $this->type = $data->type;
+            $this->priority = $data->priority;
+            $this->destination = $data->destination;
+            $this->deleterecord = $data->deleterecord;
+            $this->state = $data->state;
+        }
+
     }
 }

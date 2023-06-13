@@ -50,7 +50,7 @@ trait Dns
     protected function callbackDnsRecords(object $data): Collection
     {
         $records = new Collection();
-        foreach($data as $record)
+        foreach($data->dnsrecords as $record)
         {
             $records[] = new NetcupDnsRecord($record);
         }
