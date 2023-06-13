@@ -12,7 +12,7 @@ trait Dns
 {
 
 
-    public function infoDnsZone(mixed $domain): ?NetcupDnsZone
+    public function infoDnsZone(mixed $domain): object
     {
         if($domain instanceof NetcupDomain) {
             $param = ['domainname' => $domain->domainname];
@@ -21,9 +21,7 @@ trait Dns
         }
         $response = $this->_Call('infoDnsZone', $param );
 
-        if(!empty($response->responsedata)) {
-            return new NetcupDnsZone($response->responsedata);
-        }
+        return $this->return_encode($response, 'callbackDnsZone');
     }
 
     public function updateDnsZone()
@@ -41,7 +39,7 @@ trait Dns
 
         $response = $this->_Call('infoDnsRecords', $param );
 
-        return $this->returnDns($response);
+        return $this->return_encode($response, 'callbackDnsRecords');
     }
 
     public function updateDnsRecords()
@@ -49,7 +47,7 @@ trait Dns
 
     }
 
-    protected function loadCollectionDnsRecords(array $data): Collection
+    protected function callbackDnsRecords(object $data): Collection
     {
         $records = new Collection();
         foreach($data as $record)
@@ -60,22 +58,9 @@ trait Dns
         return $records;
     }
 
-    protected function returnDns(object $response): object
+    protected function callbackDnsZone(object $data): NetcupDnsZone
     {
-        $return = array();
-
-        if($response->statuscode == 2000) {
-            $return['success'] = true;
-            if(!empty($response->responsedata)) {
-                $return['data'] = $this->loadCollectionDnsRecords($response->responsedata->dnsrecords);
-            }
-        } else {
-            $return['success'] = false;
-        }
-        unset($response->responsedata);
-        $return['payload'] = $response;
-
-        return (object) $return;
+        return new NetcupDnsZone($data);
     }
 
 

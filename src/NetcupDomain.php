@@ -55,4 +55,10 @@ class NetcupDomain
         }
 
     }
+
+    public function topLevel(): string
+    {
+        $aux = explode('.', $this->domainname);
+        return end($aux);
+    }
 }

@@ -12,7 +12,7 @@ trait Poll
         $param['messagecount'] = $messagecount;
         $response = $this->_Call('poll', $param );
 
-        return $this->returnPoll($response);
+        return $this->return_encode($response, 'callbackPoll');
     }
 
     public function ackpoll(int $apiLogId)
@@ -20,24 +20,16 @@ trait Poll
         $param['apilogid'] = $apiLogId;
         $response = $this->_Call('ackpoll', $param );
 
-        return $this->returnPoll($response);
+        return $this->return_encode($response, 'callbackSuccessPoll');
     }
 
-    protected function returnPoll(object $response): object
+    protected function callbackPoll(array $data): array
     {
-        $return = [];
+        return $data;
+    }
 
-        if($response->statuscode == 2000) {
-            $return['success'] = true;
-            if(!empty($response->responsedata)) {
-                $return['data'] = $response->responsedata;
-            }
-        } else {
-            $return['success'] = false;
-        }
-        unset($response->responsedata);
-        $return['payload'] = $response;
-
-        return (object) $return;
+    protected function callbackSuccessPoll(string $data): bool
+    {
+        return true;
     }
 }

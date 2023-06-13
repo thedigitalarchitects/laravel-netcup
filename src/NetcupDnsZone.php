@@ -14,14 +14,16 @@ class NetcupDnsZone
     public bool $dnssecstatus;
 
 
-    public function __construct(\stdClass $data)
+    public function __construct(object $data)
     {
-        $this->name = $data->name;
-        $this->ttl = $data->ttl;
-        $this->serial = $data->serial;
-        $this->refresh = $data->refresh;
-        $this->retry = $data->retry;
-        $this->expire = $data->expire;
-        $this->dnssecstatus = $data->dnssecstatus;
+        if($data) {
+            $this->name = $data->name;
+            $this->ttl = $data->ttl;
+            $this->serial = $data->serial;
+            $this->refresh = $data->refresh;
+            $this->retry = $data->retry;
+            $this->expire = $data->expire;
+            $this->dnssecstatus = $data->dnssecstatus;
+        }
     }
 }

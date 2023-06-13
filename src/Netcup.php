@@ -26,6 +26,7 @@ class Netcup
     protected ?string $clientrequestid;
     protected int $customernumber;
     protected ClientInterface $client;
+    public object $payload;
 
 
     public function __construct(?string $clientrequestid = null)
@@ -79,6 +80,20 @@ class Netcup
         $param['apisessionid'] = $this->apisessionid ?? null;
 
         return $param;
+    }
+
+    protected function return_encode(object $response, string $callback): mixed
+    {
+        $this->payload = $response;
+        if($response->statuscode == 2000) {
+            $return = $this->{$callback}($response->responsedata);
+        } else {
+            $return['error'] = true;
+            $return['message'] = $response->longmessage;
+            $return = (object) $return;
+        }
+
+        return $return;
     }
 
     public function __destruct() {

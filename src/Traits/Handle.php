@@ -12,14 +12,14 @@ trait Handle
     {
         $response = $this->_Call('createHandle', $handle->toArray() );
 
-        return $this->returnHandle($response);
+        return $this->return_encode($response, 'callbackHandle');
     }
 
     public function updateHandle(NetcupHandle $handle): object
     {
         $response = $this->_Call('updateHandle', $handle->toArray() );
 
-        return $this->returnHandle($response);
+        return $this->return_encode($response, 'callbackHandle');
     }
 
     public function deleteHandle(NetcupHandle $handle): object
@@ -27,7 +27,7 @@ trait Handle
         $param['handle_id'] = $handle->id;
         $response = $this->_Call('deleteHandle', $param );
 
-        return $this->returnHandle($response);
+        return $this->return_encode($response, 'callbackSuccessHandle');
     }
 
     public function infoHandle(int $handle_id): ?NetcupHandle
@@ -35,23 +35,22 @@ trait Handle
         $param['handle_id'] = $handle_id;
         $response = $this->_Call('infoHandle', $param );
 
-        if(!empty($response->responsedata)) {
-            return new NetcupHandle($response->responsedata);
-        }
+        return $this->return_encode($response, 'callbackHandle');
     }
 
     public function listAllHandle(): Collection
     {
         $response = $this->_Call('listallHandle');
-        if(!empty($response->responsedata))
-        {
-            return $this->loadCollectionHandle($response->responsedata);
-        }
 
-        return new Collection();
+        return $this->return_encode($response, 'callbackCollectionHandle');
     }
 
-    protected function loadCollectionHandle(array $data): Collection
+    protected function callbackHandle(object $data): NetcupHandle
+    {
+        return new NetcupHandle($data);
+    }
+
+    protected function callbackCollectionHandle(array $data): Collection
     {
         $handles = new Collection();
         foreach($data as $handle)
@@ -62,22 +61,9 @@ trait Handle
         return $handles;
     }
 
-    protected function returnHandle(object $response): object
+    protected function callbackSuccessHandle(mixed $data): bool
     {
-        $return = array();
-
-        if($response->statuscode == 2000) {
-            $return['success'] = true;
-            if(!empty($response->responsedata)) {
-                $return['data'] = new NetcupHandle($response->responsedata);
-            }
-        } else {
-            $return['success'] = false;
-        }
-        unset($response->responsedata);
-        $return['payload'] = $response;
-
-        return (object) $return;
+        return true;
     }
 
 }
