@@ -19,14 +19,14 @@ class Nameserver
 	/**
 	 * IPV4
 	 */
-	public string $ipv4;
+	public ?string $ipv4;
 	/**
 	 * IPV6
 	 */
 	public ?string $ipv6;
 
 
-    public function __construct(string $hostname, string $ipv4, ?string $ipv6 = null)
+    public function __construct(string $hostname, ?string $ipv4 = null, ?string $ipv6 = null)
     {
         $this->hostname = $hostname;
         $this->ipv4 = $ipv4;

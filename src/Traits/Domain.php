@@ -11,16 +11,15 @@ use Tda\LaravelNetcup\NetcupDomain;
 trait Domain
 {
 
+
+
+
     public function createDomain(string $domainname, Contactentries $contact, array $nameservers)
     {
         $param['domainname'] = $domainname;
         $param['contacts'] = $contact;
-        if($nameservers = $this->setNameserver($nameservers)) {
-            $param['nameservers'] = $nameservers;
-        }
-
+        $param['nameservers'] = $this->setNameserver($nameservers);
         $response = $this->_Call('createDomain', $param );
-        dd($response);
         return $this->return_encode($response, 'callbackDomain');
     }
 

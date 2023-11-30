@@ -26,7 +26,7 @@ class Contactentries
 	/**
 	 * Id of contact handle.
 	 */
-	public string $ownerc;
+	public string $ownerc; //obligatory
 	/**
 	 * Id of contact handle.
 	 */
@@ -50,16 +50,19 @@ class Contactentries
 	/**
 	 * Id of contact handle.
 	 */
-	public string $generalrequest;
+	public string $generalrequest; //obligatory
 	/**
 	 * Id of contact handle.
 	 */
-	public string $abusecontact;
+	public string $abusecontact; //obligatory
 
 
     public function __construct(mixed $contact)
     {
         if(!empty($contact)) {
+            if(is_array($contact)) {
+                $contact = (object) $contact;
+            }
             $attributes = (new ReflectionObject($this))->getProperties(ReflectionProperty::IS_PUBLIC);
             foreach($attributes as $attribute) {
                 if (!empty($contact->{$attribute->name})) {

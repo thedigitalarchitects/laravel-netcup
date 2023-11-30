@@ -28,6 +28,9 @@ class NetcupHandle
     public function __construct(?object $handle = null)
     {
         if(!empty($handle)) {
+            if(is_array($handle)) {
+                $handle = (object) $handle;
+            }
             $attributes = (new ReflectionObject($this))->getProperties(ReflectionProperty::IS_PUBLIC);
             foreach($attributes as $attribute) {
                 if(isset($handle->{$attribute->name})) {
